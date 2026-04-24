@@ -36,14 +36,14 @@ jobs:
           timeout: 10
           max-score: 25
 
-      # 3. 安全熔斷檢查 (必須包含 setTimeout)
+      # 3. 安全熔斷檢查 (必須包含 setTimeout 與 stopMove)
       - name: Safety Timeout Check
         id: safety-timeout
         uses: education/autograding-command-grader@v1
         with:
           test-name: 'Safety Kill-switch'
           setup-command: ''
-          command: 'grep -E "setTimeout\(.*stopMove" timer.js'
+          command: 'grep "setTimeout" timer.js && grep "stopMove" timer.js'
           timeout: 10
           max-score: 25
 

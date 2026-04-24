@@ -1,5 +1,3 @@
-Viewed start-04-unit-long-press.html:1-569
-
 針對 **`start-04-unit-long-press` (長按邏輯的實現：定時器的妙用)** 單元，這是學員從「靜態點擊」轉向「連續控制」的關鍵實作課。它要求學員具備 **定時器生命週期管理 (Timer Lifecycle Management)** 與 **失效安全防護 (Operational Safety)** 的深度認知，學習如何利用 `setInterval` 實作順滑的長按連發，並解決關鍵的「定時器疊加 (Timer Stacking)」Bug 以及 5 秒自動熔斷的安全機制。
 
 以下是在 **GitHub Classroom** 部署其作業 (Assignments) 的具體建議：

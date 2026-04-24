@@ -1,0 +1,70 @@
+name: GitHub Classroom Workflow
+
+on: [push]
+
+permissions:
+  checks: write
+  actions: read
+  contents: read
+
+jobs:
+  build:
+    name: Autograding
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # 1. 檔案存在檢查
+      - name: File Presence Check
+        id: file-presence
+        uses: education/autograding-command-grader@v1
+        with:
+          test-name: 'File Presence'
+          setup-command: ''
+          command: 'ls index.html style.css timer.js assets/logic_flow.png'
+          timeout: 10
+          max-score: 25
+
+      # 2. 防疊加邏輯檢查 (必須包含 clearInterval)
+      - name: Anti-stacking Logic Check
+        id: anti-stacking
+        uses: education/autograding-command-grader@v1
+        with:
+          test-name: 'Anti-stacking Logic'
+          setup-command: ''
+          command: 'grep -E "clearInterval\(moveTimer\)" timer.js'
+          timeout: 10
+          max-score: 25
+
+      # 3. 安全熔斷檢查 (必須包含 setTimeout)
+      - name: Safety Timeout Check
+        id: safety-timeout
+        uses: education/autograding-command-grader@v1
+        with:
+          test-name: 'Safety Kill-switch'
+          setup-command: ''
+          command: 'grep -E "setTimeout\(.*stopMove" timer.js'
+          timeout: 10
+          max-score: 25
+
+      # 4. 視窗失焦保護檢查
+      - name: Blur Protection Check
+        id: blur-protection
+        uses: education/autograding-command-grader@v1
+        with:
+          test-name: 'Blur Protection'
+          setup-command: ''
+          command: 'grep "addEventListener(.*blur" timer.js'
+          timeout: 10
+          max-score: 25
+
+      # 5. 計分報告
+      - name: Autograding Reporter
+        uses: education/autograding-grading-reporter@v1
+        env:
+          FILE-PRESENCE_RESULTS: "${{steps.file-presence.outputs.result}}"
+          ANTI-STACKING_RESULTS: "${{steps.anti-stacking.outputs.result}}"
+          SAFETY-TIMEOUT_RESULTS: "${{steps.safety-timeout.outputs.result}}"
+          BLUR-PROTECTION_RESULTS: "${{steps.blur-protection.outputs.result}}"
+        with:
+          runners: file-presence,anti-stacking,safety-timeout,blur-protection

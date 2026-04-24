@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Start 04 - 長按邏輯與安全熔斷</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=JetBrains+Mono&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Long Press Logic</h1>
+            <p class="subtitle">單元 04：定時器生命週期與失效安全防護</p>
+        </header>
+
+        <main class="panel">
+            <!-- 狀態儀表板 -->
+            <div class="status-grid">
+                <div class="status-item">
+                    <span class="status-label">活動定時器數量</span>
+                    <span id="timer-count" class="status-value">0</span>
+                </div>
+                <div class="status-item">
+                    <span class="status-label">安全狀態</span>
+                    <span id="safety-status" class="status-value">NORMAL</span>
+                </div>
+            </div>
+
+            <!-- 控制盤 -->
+            <div class="control-pad">
+                <button id="btn-up" class="btn-ctrl up" data-dir="UP">▲</button>
+                <button id="btn-left" class="btn-ctrl left" data-dir="LEFT">◀</button>
+                <div class="center"></div>
+                <button id="btn-right" class="btn-ctrl right" data-dir="RIGHT">▶</button>
+                <button id="btn-down" class="btn-ctrl down" data-dir="DOWN">▼</button>
+            </div>
+
+            <!-- 偵錯監視器 -->
+            <div class="debug-monitor">
+                <span class="status-label">Timer ID 追蹤紀錄</span>
+                <div id="active-timers">等待操作中...</div>
+            </div>
+        </main>
+
+        <section class="instructions">
+            <p><strong>任務指引：</strong></p>
+            <ul>
+                <li>實作 <code>startMove()</code>：按下按鈕時啟動 <code>setInterval</code>。</li>
+                <li><strong>防疊加機制：</strong>啟動新定時器前，務必先清理舊的。</li>
+                <li><strong>5秒熔斷：</strong>長按超過 5 秒必須自動執行 <code>stopMove()</code>。</li>
+                <li><strong>資源清理：</strong>放開按鈕或失焦時，確實 <code>clearInterval</code>。</li>
+            </ul>
+        </section>
+    </div>
+
+    <script src="timer.js"></script>
+</body>
+</html>

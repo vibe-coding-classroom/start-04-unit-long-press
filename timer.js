@@ -34,19 +34,23 @@ function updateUI(status = "NORMAL", isWarning = false) {
 function startMove(dir) {
     // [TODO] 任務 1：防疊加保險
     // 提示：如果 moveTimer 已經存在，先清除它
-    
+    if (moveTimer) clearInterval(moveTimer);
+    if (safetyTimer) clearTimeout(safetyTimer);
     
     activeDirection = dir;
     console.log(`🚀 Start moving: ${dir}`);
 
     // [TODO] 任務 2：啟動連發定時器
     // 實作：每 100ms 執行一次 loop(dir)
-    // moveTimer = setInterval(...)
+    moveTimer = setInterval(() => loop(dir), 100);
 
 
     // [TODO] 任務 3：5秒安全熔斷 (Safety Kill-switch)
     // 實作：設定一個 5 秒後的 setTimeout，時間到則強制執行 stopMove()
-    // safetyTimer = setTimeout(...)
+    safetyTimer = setTimeout(() => {
+        stopMove();
+        updateUI("AUTO-STOP", true);
+    }, 5000);
     
 
     updateUI();
@@ -60,7 +64,11 @@ function stopMove() {
 
     // [TODO] 任務 4：資源清理
     // 實作：清除 moveTimer 與 safetyTimer，並將變數設回 null
+    if (moveTimer) clearInterval(moveTimer);
+    if (safetyTimer) clearTimeout(safetyTimer);
     
+    moveTimer = null;
+    safetyTimer = null;
 
     activeDirection = null;
     updateUI();
@@ -105,5 +113,5 @@ buttons.forEach(btn => {
 // [TODO] 任務 5：視窗失去焦點保護
 // 提示：監聽 'blur' 事件，確保使用者切換分頁時機器人會停止
 window.addEventListener('blur', () => {
-    // stopMove();
+    stopMove();
 });
